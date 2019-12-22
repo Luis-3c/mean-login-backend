@@ -14,4 +14,8 @@ router.post('/login', usersController.loginUser);
 
 router.post('/verify', usersController.validarToken);
 
+router.post('/profile', usersController.validarToken, (req, res)=>{
+    res.json({'response': 'my profile'})
+});
+
 module.exports = router;

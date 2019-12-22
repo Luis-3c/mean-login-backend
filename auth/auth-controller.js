@@ -47,13 +47,16 @@ exports.loginUser = (req, res, next) => {
 			if (resultPassword) {
 				const expiresIn = 24 * 60 * 60;
 				const accessToken = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: expiresIn });
-				const dataUser = {
+				/*const dataUser = {
 					name: user.name,
 					email: user.email,
 					accessToken: accessToken,
 					expiresIn: expiresIn
-				};
-				res.send({ dataUser });
+				};*/
+				res.json({ name: user.name,
+					email: user.email,
+					accessToken: accessToken,
+					expiresIn: expiresIn });
 			} else {
 				//password incorrecta
 				res.status(409).send({ message: 'mail or password incorrect' });
@@ -62,9 +65,10 @@ exports.loginUser = (req, res, next) => {
 	});
 };
 
-exports.validarToken = (req, res) => {
-	jwt.verify(req.body.token, SECRET_KEY, (err, validacion) => {
-		if (err) res.json({ status: 'token invalido o vencido' });
-		res.json(validacion);
+exports.validarToken = (req, res, next) => {
+	jwt.verify(req.body.token, SECRET_KEY, (err) => {
+		if (err) {
+			res.json({ status: 'token invalido o vencido' });
+		}else return next();
 	});
 };
